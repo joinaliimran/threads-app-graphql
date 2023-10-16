@@ -1,12 +1,18 @@
+import UserService, {
+  CreateUserPayload,
+  GetUserTokenPayload,
+} from "../../services/user";
+
 const queries = {
-  hello: () => {
-    return "Hi GraphQL";
+  getUserToken: async (_: any, payload: GetUserTokenPayload) => {
+    return await UserService.getUserToken(payload);
   },
 };
 
 const mutations = {
-  createUser: async (_: any, {}: {}) => {
-    return "randomid";
+  createUser: async (_: any, payload: CreateUserPayload) => {
+    const response = await UserService.createUser(payload);
+    return response.id;
   },
 };
 
