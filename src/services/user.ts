@@ -30,6 +30,10 @@ class UserService {
     });
   }
 
+  public static async getUserById(id: string) {
+    return await prismaClient.user.findUnique({ where: { id: id } });
+  }
+
   public static async getUserToken(payload: GetUserTokenPayload) {
     const { email, password } = payload;
     const userFound = await this.getUserByEmail(email);
@@ -45,7 +49,7 @@ class UserService {
       throw new Error("Password not correct");
 
     const userToken = JWT.sign(
-      { id: userFound.id, email: userFound.email },
+      { user: { id: userFound.id, email: userFound.email } },
       JWT_SECRET
     );
 
@@ -61,6 +65,10 @@ class UserService {
     return await prismaClient.user.create({
       data: { firstName, lastName, email, password: hashedPassword, salt },
     });
+  }
+
+  public static decodeJWTToken(token: string) {
+    return JWT.verify(token, JWT_SECRET);
   }
 }
 

@@ -7,6 +7,14 @@ const queries = {
   getUserToken: async (_: any, payload: GetUserTokenPayload) => {
     return await UserService.getUserToken(payload);
   },
+  getLoggedInUser: async (_: any, payload: any, context: any) => {
+    if (context && context.user) {
+      const userFound = await UserService.getUserById(context.user.id);
+      return userFound;
+    } else {
+      throw new Error("User not found");
+    }
+  },
 };
 
 const mutations = {
